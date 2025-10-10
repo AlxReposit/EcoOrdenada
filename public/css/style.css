@@ -1,0 +1,23 @@
+#map {
+  height: calc(100vh - 112px); /* Altura total menos navbar e rodapé */
+}
+
+.icon-xbig {
+  font-size: 11rem
+}
+
+.icon-big {
+  font-size: 7rem
+}
+
+.icon-medium {
+  font-size: 5rem
+}
+
+.icon-small {
+  font-size: 3rem
+}
+
+.icon-xsmall {
+  font-size: 1rem
+}
