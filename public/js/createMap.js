@@ -20,11 +20,45 @@ const dados = [
 
 dados.forEach(local => {
     L.marker(local.coordenada)
-    .bindPopup("<b>"+local.descricao+"</b><br>"+local.coordenada)
-    .addTo(map);
+        .bindPopup("<b>" + local.descricao + "</b><br>" + local.coordenada)
+        .addTo(map);
 });
 
 // TODO
 // Busca com Nominatim
 
-document.getElementById('')
+document.getElementById('formBusca').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    //Query para busca
+    const query = document.getElementById('inputBusca').value;
+    if (query == "" || !query || query.trim() == "") {
+        return;
+    }
+
+    //Chamando API Nominatim
+    //"https://nominatim.openstreetmap.org/search?q="+query+"&limit=2&format=json"
+    const url = `https://nominatim.openstreetmap.org/search?q=${query}&limit=3&format=json`;
+
+    try {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`Erro na chamada da API: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log(result);
+
+        result.forEach(location => {
+            L.marker([location.lat, location.lon])
+                .bindPopup("<b>" + location.name + "</b><br>" + location.display_name)
+                .addTo(map);
+        });
+
+        map.setView([result[0].lat, result[0].lon], 13);
+
+    } catch (error) {
+        console.log(error);
+    }
+});
