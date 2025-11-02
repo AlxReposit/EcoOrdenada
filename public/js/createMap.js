@@ -14,8 +14,10 @@ L.Control.btnBuscaBox = L.Control.extend({
         btn.classList.add('btn-light', 'border');
         btn.innerHTML = 'Buscar no Mapa';
 
-        L.DomEvent.on(btn, 'click', () => {
-            buscaBoxOverpass();
+        L.DomEvent.on(btn, 'click', async () => {
+            //testeBoundingBox();
+            const dados = await buscarBoxMapa();
+            carregarMarcadores(dados);
         });
 
         return btn;
@@ -43,8 +45,10 @@ const dados = [
 //var marker = L.marker([51.5, -0.09]).addTo(map);
 //marker.bindPopup("<b>Hello world!</b><br>I am a popup.");
 
+//variáavel para controle de marcadores ativos no mapa
 let marcadores = [];
 
+//Envia as informações digitadas pelo usuário para realizar a busca nas APIs
 document.getElementById('formBusca').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -54,17 +58,21 @@ document.getElementById('formBusca').addEventListener('submit', async (e) => {
         return;
     }
 
+    const distancia = document.getElementById('inputDistancia').value;
+
     const dadosNominatim = await buscarLocalNominatim(query);
-    const dadosOverpass = await buscarLocaisOverpass(dadosNominatim[0].lat, dadosNominatim[0].lon)
+    const dadosOverpass = await buscarLocaisDistancia(dadosNominatim[0].lat, dadosNominatim[0].lon, distancia)
     carregarMarcadores(dadosOverpass);
 });
 
+//Remove marcadores do mapa
 function removerMarcadores() {
     marcadores.forEach(marcador => {
         map.removeLayer(marcador);
     });
 }
 
+//Carrega os marcadores no mapa conforme dados recebidos
 function carregarMarcadores(locais) {
 
     if (locais == null || locais == undefined || locais == '') {
@@ -106,6 +114,7 @@ function carregarMarcadores(locais) {
     //listaMarcadores.firstChild.classList.add('active');
 }
 
+//FUnção para pesquisar o local que o usuário informou no formulário e retornar a latitude e longitude, para ser usados na busca com Overpass
 async function buscarLocalNominatim(query) {
     //Chamando API Nominatim
     //Tem o objetivo de encontrar as coordenadas do local que o usuário quer pesquisar, usando como "ponto central"
@@ -133,10 +142,8 @@ async function buscarLocalNominatim(query) {
     }
 }
 
-async function buscarLocaisOverpass(lat, lon, distanciaBusca) {
-    //utilizar com Overpass API
-    const url = "https://overpass-api.de/api/interpreter";
-
+//Função para enviar a busca de dados com base no local encontrado pelo Nominatim e da distância segundo informações do formulário
+async function buscarLocaisDistancia(lat, lon, distanciaBusca) {
     map.setView([lat, lon], 13);
 
     if (distanciaBusca == null) {
@@ -179,10 +186,43 @@ async function buscarLocaisOverpass(lat, lon, distanciaBusca) {
     amenity 	waste_transfer_station 	node area 	A waste transfer station is a location that accepts, consolidates and transfers waste in bulk. 
     */
 
+    const dados = await buscarApiOverpass(busca);
+    return dados;
+}
+
+//Função para enviar a busca de dados dentro dos limites do mapa (que o usuário está vendo)
+async function buscarBoxMapa() {
+    //Limita a distância de pesquisa pelo zoom
+    if (map.getZoom() < 10) {
+        alert('Aproxime o mapa para pesquisar!');
+        return;
+    }
+
+    const url = "https://overpass-api.de/api/interpreter";
+
+    const latS = map.getBounds().getSouth();
+    const lonW = map.getBounds().getWest();
+    const latN = map.getBounds().getNorth();
+    const lonE = map.getBounds().getEast();
+
+    const busca = `
+    [out:json];
+    node(${latS}, ${lonW}, ${latN}, ${lonE})[amenity=recycling];
+    out;
+    `;
+
+    return await buscarApiOverpass(busca);
+}
+
+//FUnção para buscar dados na API Overpass da OpenStreetMap e e retornar os dados mapeados
+async function buscarApiOverpass(query) {
+    //utilizar com Overpass API
+    const url = "https://overpass-api.de/api/interpreter";
+
     try {
         const resposta = await fetch(url, {
             method: "POST",
-            body: busca
+            body: query
         });
 
         if (!resposta.ok) {
@@ -209,53 +249,33 @@ async function buscarLocaisOverpass(lat, lon, distanciaBusca) {
     }
 }
 
-async function buscaBoxOverpass() {
-    //utilizar com Overpass API
-    const url = "https://overpass-api.de/api/interpreter";
+
+//FUnções para teste - apagar depois
+
+function testeBoundingBox() {
 
     const latS = map.getBounds().getSouth();
-    const latN = map.getBounds().getNorth();
     const lonW = map.getBounds().getWest();
+    const latN = map.getBounds().getNorth();
     const lonE = map.getBounds().getEast();
 
-    const busca = `
-    [out:json];
-    node(${latS}, ${lonW}, ${latN}, ${lonE})[amenity=recycling];
-    out;
-    `;
+    console.log(`lat South: ${latS}`)
+    console.log(`lon West: ${lonW}`)
+    console.log(`lat North: ${latN}`)
+    console.log(`lon East: ${lonE}`)
 
-    console.log(busca)
+    console.log(`N - S: ${latN - latS}`)
+    console.log(`E - W: ${lonE - lonW}`)
 
-    try {
-        const resposta = await fetch(url, {
-            method: "POST",
-            body: busca
-        });
+    console.log(`zoom: ${map.getZoom()}`)
 
-        if (!resposta.ok) {
-            throw new Error(`Erro na chamada da API Overpass: ${resposta.status}`);
-        }
 
-        const dados = await resposta.json();
 
-        if (dados.elements == '') {
-            return null;
-        }
-
-        const dadosMapeados = dados.elements.map(local => ({
-            id: local.id,
-            lat: local.lat,
-            lon: local.lon,
-            nome: local.tags.name || "Local sem nome",
-            tipo: local.tags.recycling_type || "Desconchecido",
-            tags: local.tags
-        }));
-
-        carregarMarcadores(dadosMapeados);
-
-    } catch (error) {
-        console.log(error);
+    if (map.getZoom() < 10) {
+        alert('Aproxime o mapa para pesquisar!')
     }
+
+
 }
 
 function mapearDados(dados) {

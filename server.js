@@ -6,12 +6,10 @@ const port = 3000
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.use(express.static(__dirname + '/public', {
-    index: false, 
-    immutable: true, 
-    cacheControl: true,
-    maxAge: "30d"
-}))
+app.use(express.static(path.join(__dirname, 'public')))
+app.use('/css', express.static(path.join(__dirname, '/node_modules/bootstrap/dist/css')))
+app.use('/css', express.static(path.join(__dirname, '/node_modules/bootstrap-icons/font')))
+app.use('/leaflet', express.static(path.join(__dirname, '/node_modules/leaflet/dist')))
 
 app.post('/submit', (req, res, next)=>{
     
