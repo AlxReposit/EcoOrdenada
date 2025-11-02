@@ -1,7 +1,45 @@
-#map {
-  height: calc(100vh - 112px); /* Altura total menos navbar e rodapé */
+/*#map {
+  height: calc(100vh - 160px);
+  / * Altura total menos navbar e rodapé * /
 }
 
+@media only screen and (max-width: 767px) {
+  #map {
+    height: calc(100vh - 200px);
+  }
+}
+
+TODO
+  - Deixar busca e botão no  meio
+  - Adicionar espaço entre links e busca
+  */
+
+
+#map {
+  height: calc(100vh - 170px);
+  width: 100%;
+}
+
+#sidebar {
+  height: calc(100vh - 170px);
+  overflow-y: auto;
+}
+
+.list-group-item {
+  cursor: pointer;
+}
+
+
+
+#btnBuscaBox:hover{
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+
+
+
+/*Tamanhos de ícones*/
 .icon-xbig {
   font-size: 11rem
 }

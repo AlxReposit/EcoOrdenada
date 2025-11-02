@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoMapa - Descarte Ecológico</title>
+    <title>EcoOrdenada - Descarte Ecológico</title>
     <link rel="icon" href="images/logo.svg">
 
     <!-- Bootstrap -->
@@ -21,33 +21,80 @@
 </head>
 
 <body>
-    
+
     <!-- Navbar -->
     <div class="bg-success">
         <div class="container">
             <nav class="navbar navbar-expand-lg navbar-dark bg-success"> <!--fixed-top-->
-                <div class="container-fluid d-flex flex-wrap justify-content-center py-2 mb-1 border-bottom border-light">
+                <div
+                    class="container-fluid d-flex flex-wrap justify-content-center py-2 mb-1 border-bottom border-light">
 
-                    <a class="navbar-brand fw-bold" href="#"> <i class="bi bi-recycle"></i> EcoMapa</a>
+                    <a class="navbar-brand fw-bold" href="#"> <i class="bi bi-recycle"></i> EcoOrdenada</a>
                     <a class="nav-link ms-3" href="sobre.html"> <i class="bi bi-info-circle"></i> Sobre</a>
 
                     <form class="d-flex ms-auto" id="formBusca">
-                        <input class="form-control me-3" id="inputBusca" type="search" placeholder="Buscar endereço ou tipo">
+                        <input class="form-control me-3" id="inputBusca" type="search" placeholder="Buscar endereço">
+                        <input class="form-control me-3" id="inputDistancia" type="number" placeholder="Distância (Km)" style="width: 50%;">
                         <button class="btn btn-outline-light" type="submit">Buscar</button>
                     </form>
-                    
                 </div>
             </nav>
         </div>
     </div>
 
-    <!-- Mapa -->
-    <div id="map"></div>
+
+    <!-- Barra de filtros 
+    <div class="container my-2">
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            <button class="btn btn-outline-success active" data-tipo="todos">Todos</button>
+            <button class="btn btn-outline-success" data-tipo="Recicláveis">Recicláveis</button>
+            <button class="btn btn-outline-success" data-tipo="Eletrônicos">Eletrônicos</button>
+            <button class="btn btn-outline-success" data-tipo="Pilhas e Baterias">Pilhas e Baterias</button>
+        </div>
+    </div>-->
+
+    
+
+
+    <div class="container-fluid">
+        <div class="row no-gutters">
+
+            <!-- Sidebar -->
+            <div class="col-md-3 bg-body-tertiary p-0" id="sidebar">
+                <h5 class="text-body-primary fw-bold p-3 mt-2">Locais Encontrados</h5>
+                <ul class="list-group list-group-flush border-bottom" id="listaMarcadores">
+
+                    <li class="list-group-item list-group-item-action list-group-item-dark">
+                        <p class="mb-2 fw-bold">List group item heading</p>
+                        <p class="small">Some placeholder content in a paragraph below the heading and date.</p>
+                    </li>
+
+                    <li class="list-group-item list-group-item-action list-group-item-dark">
+                        <p class="mb-2 fw-bold">List group item heading</p>
+                        <p class="small">Some placeholder content in a paragraph below the heading and date.</p>
+                    </li>
+
+                    <li class="list-group-item list-group-item-action list-group-item-dark active">
+                        <p class="mb-2 fw-bold">List group item heading</p>
+                        <p class="small">Some placeholder content in a paragraph below the heading and date.</p>
+                    </li>
+                    
+                </ul>
+            </div>
+
+            <!-- Mapa -->
+            <div class="col-md-9 p-0">
+                <div id="map"></div>
+            </div>
+
+        </div>
+    </div>
 
     <!-- Rodapé -->
     <div class="container">
-        <footer class="flex-wrap justify-content-between align-items-center text-center py-3 my-4 border-top border-light">
-            <span class="text-body-secondary">EcoMapa • Dados de <a href="https://www.openstreetmap.org"
+        <footer
+            class="flex-wrap justify-content-between align-items-center text-center py-3 mt-4 border-top border-light">
+            <span class="text-body-secondary">EcoOrdenada • Dados de <a href="https://www.openstreetmap.org"
                     target="_blank" class="link-success">OpenStreetMap</a></span>
         </footer>
     </div>

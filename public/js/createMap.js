@@ -1,31 +1,49 @@
 //Criação do mapa com Leaflet
-var map = L.map('map').setView([51.505, -0.09], 13);
+var map = L.map('map').setView([-23.3151, -47.2591], 11);
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-//Dados de coordenadas armazenados em JSON
-//Buscar no servidor
+//Adicionar botão personalizado ao mapa para fazer a busca com base no estado atual do mapa
+L.Control.btnBuscaBox = L.Control.extend({
+    onAdd: function (map) {
+        var btn = L.DomUtil.create('button', 'btn');
+        btn.id = 'btnBuscaBox';
+        btn.classList.add('btn-light', 'border');
+        btn.innerHTML = 'Buscar no Mapa';
+
+        L.DomEvent.on(btn, 'click', () => {
+            buscaBoxOverpass();
+        });
+
+        return btn;
+    },
+
+    onRemove: function (map) {
+        // Nothing to do here
+    }
+});
+
+L.control.btnBuscaBox = function (opts) {
+    return new L.Control.btnBuscaBox(opts);
+}
+
+L.control.btnBuscaBox({ position: 'bottomleft' }).addTo(map);
+
+/*
 const dados = [
     { descricao: 'Local A', coordenada: [51.505, -0.09] },
     { descricao: 'Local B', coordenada: [51.4, -0.09] },
     { descricao: 'Local C', coordenada: [51.3, -0.09] },
     { descricao: 'Local D', coordenada: [51.2, -0.09] }
-]
+]*/
 
 //var marker = L.marker([51.5, -0.09]).addTo(map);
 //marker.bindPopup("<b>Hello world!</b><br>I am a popup.");
 
-dados.forEach(local => {
-    L.marker(local.coordenada)
-        .bindPopup("<b>" + local.descricao + "</b><br>" + local.coordenada)
-        .addTo(map);
-});
-
-// TODO
-// Busca com Nominatim
+let marcadores = [];
 
 document.getElementById('formBusca').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -36,29 +54,218 @@ document.getElementById('formBusca').addEventListener('submit', async (e) => {
         return;
     }
 
+    const dadosNominatim = await buscarLocalNominatim(query);
+    const dadosOverpass = await buscarLocaisOverpass(dadosNominatim[0].lat, dadosNominatim[0].lon)
+    carregarMarcadores(dadosOverpass);
+});
+
+function removerMarcadores() {
+    marcadores.forEach(marcador => {
+        map.removeLayer(marcador);
+    });
+}
+
+function carregarMarcadores(locais) {
+
+    if (locais == null || locais == undefined || locais == '') {
+        alert("Não foram encontrados locais de reciclagem próximos. Por favor, tente aumentar a distância da pesquisa.");
+        return;
+    }
+
+    removerMarcadores();
+    const listaMarcadores = document.getElementById('listaMarcadores');
+    listaMarcadores.innerHTML = '';
+
+    locais.forEach(local => {
+        //Ajustar descrições para facilitar leitura
+        const tipo = (local.tipo == 'centre') ? 'Centro de Coleta de Recicláveis' : 'Container de Lixo Reciclável';
+
+        //Acrescentar marcador no mapa
+        const marcador = L.marker([local.lat, local.lon])
+            .bindPopup(`
+                <b>${tipo}</b>
+                <br>${local.nome}<br>
+                <a href="https://www.google.com/maps/?q=${local.lat},${local.lon}" target="_blank">Google Maps</a>
+                `)
+            .addTo(map);
+        marcadores.push(marcador);
+
+        //Acrescentar local na lista lateral
+        const itemLista = document.createElement('li');
+        itemLista.classList.add('list-group-item', 'list-group-item-action');
+        itemLista.innerHTML = `<p class="mb-2 fw-bold">${tipo} - ${local.nome}</p>
+                        <p class="small"><a href="https://www.google.com/maps/?q=${local.lat},${local.lon}" target="_blank">Abrir no Google Maps</a></p>`;
+        itemLista.addEventListener('click', () => {
+            map.setView([local.lat, local.lon], 15);
+            marcador.openPopup();
+        })
+        listaMarcadores.appendChild(itemLista);
+    });
+
+    //map.setView([locais[0].lat, locais[0].lon], 13);
+    //listaMarcadores.firstChild.classList.add('active');
+}
+
+async function buscarLocalNominatim(query) {
     //Chamando API Nominatim
+    //Tem o objetivo de encontrar as coordenadas do local que o usuário quer pesquisar, usando como "ponto central"
     //"https://nominatim.openstreetmap.org/search?q="+query+"&limit=2&format=json"
-    const url = `https://nominatim.openstreetmap.org/search?q=${query}&limit=3&format=json`;
+    const url = `https://nominatim.openstreetmap.org/search?q=${query}&limit=1&format=json`;
 
     try {
         const response = await fetch(url);
 
         if (!response.ok) {
-            throw new Error(`Erro na chamada da API: ${response.status}`);
+            throw new Error(`Erro na chamada da API Nominatim: ${response.status}`);
         }
 
         const result = await response.json();
-        console.log(result);
+        //console.log(JSON.stringify(result));
 
-        result.forEach(location => {
-            L.marker([location.lat, location.lon])
-                .bindPopup("<b>" + location.name + "</b><br>" + location.display_name)
-                .addTo(map);
-        });
-
-        map.setView([result[0].lat, result[0].lon], 13);
+        return result.map(local => ({
+            id: local.osm_id,
+            lat: local.lat,
+            lon: local.lon,
+        }));
 
     } catch (error) {
         console.log(error);
     }
-});
+}
+
+async function buscarLocaisOverpass(lat, lon, distanciaBusca) {
+    //utilizar com Overpass API
+    const url = "https://overpass-api.de/api/interpreter";
+
+    map.setView([lat, lon], 13);
+
+    if (distanciaBusca == null) {
+        distanciaBusca = 5000;
+    }
+    //const distanciaBusca = 3000;
+    //const lat = -23.519127;
+    //const lon = -46.641321;
+
+    const busca = `
+    [out:json];
+    node(around:${distanciaBusca}, ${lat}, ${lon})[amenity=recycling];
+    out;
+    `;
+
+    const buscaId = `
+    [out:json][timeout:250];
+    // gather results
+    node(id:9044572970, {{bbox}});
+    // print results
+    out;
+    `;
+
+    const buscaLixeira = `
+    [out:json][timeout:25];
+    (
+      node(around:${distanciaBusca}, ${lat}, ${lon})["amenity"="waste_basket"];
+      node(around:${distanciaBusca}, ${lat}, ${lon})["amenity"="waste_disposal"];
+    );
+    out geom;
+    `;
+
+    /*
+    https://overpass-turbo.eu/#
+    https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL
+    https://wiki.openstreetmap.org/wiki/Map_features#Waste_Management
+    amenity 	recycling 	node area 	Recycling facilities (bottle banks, etc.). Combine with recycling_type=container for containers or recycling_type=centre for recycling centres. 	
+    amenity 	waste_basket 	node 	A single small container for depositing garbage that is easily accessible for pedestrians. 	
+    amenity 	waste_disposal 	node 	A medium or large disposal bin, typically for bagged up household or industrial waste. 	
+    amenity 	waste_transfer_station 	node area 	A waste transfer station is a location that accepts, consolidates and transfers waste in bulk. 
+    */
+
+    try {
+        const resposta = await fetch(url, {
+            method: "POST",
+            body: busca
+        });
+
+        if (!resposta.ok) {
+            throw new Error(`Erro na chamada da API Overpass: ${resposta.status}`);
+        }
+
+        const dados = await resposta.json();
+
+        if (dados.elements == '') {
+            return null;
+        }
+
+        return dados.elements.map(local => ({
+            id: local.id,
+            lat: local.lat,
+            lon: local.lon,
+            nome: local.tags.name || "Local sem nome",
+            tipo: local.tags.recycling_type || "Desconchecido",
+            tags: local.tags
+        }));
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function buscaBoxOverpass() {
+    //utilizar com Overpass API
+    const url = "https://overpass-api.de/api/interpreter";
+
+    const latS = map.getBounds().getSouth();
+    const latN = map.getBounds().getNorth();
+    const lonW = map.getBounds().getWest();
+    const lonE = map.getBounds().getEast();
+
+    const busca = `
+    [out:json];
+    node(${latS}, ${lonW}, ${latN}, ${lonE})[amenity=recycling];
+    out;
+    `;
+
+    console.log(busca)
+
+    try {
+        const resposta = await fetch(url, {
+            method: "POST",
+            body: busca
+        });
+
+        if (!resposta.ok) {
+            throw new Error(`Erro na chamada da API Overpass: ${resposta.status}`);
+        }
+
+        const dados = await resposta.json();
+
+        if (dados.elements == '') {
+            return null;
+        }
+
+        const dadosMapeados = dados.elements.map(local => ({
+            id: local.id,
+            lat: local.lat,
+            lon: local.lon,
+            nome: local.tags.name || "Local sem nome",
+            tipo: local.tags.recycling_type || "Desconchecido",
+            tags: local.tags
+        }));
+
+        carregarMarcadores(dadosMapeados);
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+function mapearDados(dados) {
+    //Padronizazr dados
+    return dados.elements.map(local => ({
+        id: local.id,
+        lat: local.lat,
+        lon: local.lon,
+        nome: local.tags.name || "Local sem nome",
+        tipo: local.tags.recycling_type || "Desconchecido",
+        tags: local.tags
+    }));
+}
