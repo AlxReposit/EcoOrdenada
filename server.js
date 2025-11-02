@@ -6,7 +6,12 @@ const port = 3000
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.use(express.static('public'))
+app.use(express.static(__dirname + '/public', {
+    index: false, 
+    immutable: true, 
+    cacheControl: true,
+    maxAge: "30d"
+}))
 
 app.post('/submit', (req, res, next)=>{
     
