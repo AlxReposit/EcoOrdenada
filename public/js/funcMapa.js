@@ -17,7 +17,7 @@ L.Control.btnBuscaBox = L.Control.extend({
         L.DomEvent.on(btn, 'click', async () => {
             //testeBoundingBox();
             const dados = await buscarBoxMapa();
-            carregarMarcadores(dados);
+            if(dados != null) carregarMarcadores(dados);
         });
 
         return btn;
@@ -195,7 +195,7 @@ async function buscarBoxMapa() {
     //Limita a distância de pesquisa pelo zoom
     if (map.getZoom() < 10) {
         alert('Aproxime o mapa para pesquisar!');
-        return;
+        return null;
     }
 
     const url = "https://overpass-api.de/api/interpreter";
