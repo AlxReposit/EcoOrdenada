@@ -12,23 +12,36 @@
     <link rel="stylesheet" href="/css/bootstrap-icons.min.css">
     <link rel="stylesheet" href="/css/style.css">
 
+    <style>
+        .nav-link {
+            font-size: large;
+            color: #198754;
+        }
+
+        .nav-link:hover {
+            color: #20c997;
+        }
+
+        p, li {
+            font-size: large;
+        }
+        
+    </style>
+
 </head>
 
-
-
 <body>
-
     <!-- Navbar -->
     <div class="bg-success">
         <div class="container">
             <nav class="navbar navbar-expand-lg navbar-dark bg-success"> <!--fixed-top-->
                 <div
                     class="container-fluid d-flex flex-wrap justify-content-center py-2 mb-1 border-bottom border-light">
-                    <a class="navbar-brand fw-bold" href="index.html"> <i class="bi bi-recycle"></i> EcoOrdenada</a>
-                    <a class="text-decoration-none text-body-emphasis ms-3" href="#"> <i class="bi bi-info-circle"></i> Sobre</a>
+                    <a class="navbar-brand fw-bold" href="index.html">Eco<i class="bi-geo-alt-fill"
+                            alt="O"></i>rdenada</a>
+                    <a class="text-decoration-none text-body-emphasis ms-3" href="#"> <i class="bi bi-info-circle"></i>
+                        Sobre</a>
 
-                    <a class="navbar-brand fw-bold" href="#"> 
-                    <a class="nav-link ms-3" href="sobre.html"> 
                     <div class="d-flex ms-auto" role="search" id="searchForm">
                         <a class="btn btn-outline-light" href="index.html"><i class="bi bi-recycle"></i></a>
                     </div>
@@ -37,8 +50,157 @@
         </div>
     </div>
 
+    <!-- Introdução -->
+    <div class="container px-4 my-5">
+        <h1>Bem vindo ao EcoOrdenada! </h1>
+        <p>Esse site é um projeto de extensão para o curso de Análise e Desenvolvimento de
+            Sistemas da Universidade Cruzeiro do Sul. O objetivo é incentivar a economia circular e o desenvolvimento
+            sustentável pela conscientização sobre reciclagem e descarte correto de resíduos, e melhorar o acesso à
+            informação de locais que oferecem esses serviços.</p>
+    </div>
+
     <!-- Conteúdo -->
-    <div class="px-4 py-5 my-5 text-center">
+    <div class="container px-4 my-5">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="instrucoes-tab" data-bs-toggle="tab"
+                    data-bs-target="#instrucoes-tab-pane" type="button" role="tab" aria-controls="instrucoes-tab-pane"
+                    aria-selected="true"><i class="bi bi-info-circle"></i> Instruções</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="reciclagem-tab" data-bs-toggle="tab" data-bs-target="#reciclagem-tab-pane"
+                    type="button" role="tab" aria-controls="reciclagem-tab-pane" aria-selected="false"><i
+                        class="bi bi-recycle"></i> Reciclagem</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="mapeamento-tab" data-bs-toggle="tab" data-bs-target="#mapeamento-tab-pane"
+                    type="button" role="tab" aria-controls="mapeamento-tab-pane" aria-selected="false"><i
+                        class="bi bi-map"></i> Mapeamento</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="contato-tab" data-bs-toggle="tab" data-bs-target="#contato-tab-pane"
+                    type="button" role="tab" aria-controls="contato-tab-pane" aria-selected="false"><i
+                        class="bi bi-chat-right-dots"></i> Fale
+                    Conosco</button>
+            </li>
+        </ul>
+        <div class="tab-content border border-top-0 py-4 px-5" id="myTabContent">
+            <div class="tab-pane fade show active" id="instrucoes-tab-pane" role="tabpanel"
+                aria-labelledby="instrucoes-tab">
+                <p>Para encontrar locais de reciclagem e descarte, digite o nome de uma <strong>cidade ou
+                        endereço</strong> na caixa de
+                    Busca, a <strong>distância</strong> da busca em quilômetros e clique no botão com a lupa (<i
+                        class="bi bi-search"></i>). Outra forma de realizar a busca
+                    é mover o mapa manualmente e clicar no botão <strong>“Buscar no Mapa”</strong> no canto inferior
+                    esquerdo para
+                    procurar todos os pontos que vão
+                    aparecer na área que o mapa está mostrando.</p>
+                <p>Os locais encontrados vão aparecer como pontos no mapa, e como itens na tabela lateral, que podem ser
+                    clicados para serem visualizados no mapa. Também é possível clicar no link para abrir a coordenada
+                    no google maps, mas nem sempre o local procurado vai estar indicado no google Maps, ou pode estar em
+                    uma coordenada próxima.</p>
+                <p><strong>Limitações:</strong> A base de dados utilizada para esse site não possui informações de todas
+                    as organizações
+                    e locais de reciclagem e coleta seletiva. Para algumas regiões, pode até não haver informação
+                    nenhuma.</p>
+                <p>Para contornar essa situação, o site EcoOrdenada utiliza um banco de dados próprio com locais
+                    inseridos manualmente em conjunto com a base de dados do <strong>Open Street Map</strong> (ver seção
+                    “Mapeamento”).
+                </p>
+            </div>
+            <div class="tab-pane fade" id="reciclagem-tab-pane" role="tabpanel" aria-labelledby="reciclagem-tab">
+                <h3>O que é reciclagem e por que ela importa</h3>
+                <p>
+                    Reciclar é transformar materiais usados em novos produtos, evitando o desperdício e reduzindo a
+                    extração de recursos naturais.
+                    É uma das atitudes mais simples e eficazes para preservar o planeta. Além de diminuir a poluição
+                    do solo, da água e do ar, a reciclagem gera emprego e renda por meio de cooperativas, organizações e
+                    empresas que prestam esses serviços.
+                </p>
+
+                <h3>Tempo de decomposição de materiais</h3>
+                <p>Veja quanto tempo alguns materiais levam para se decompor:</p>
+                <div class="text-center">
+                    <img src="images/decomposicao_materiais.jpg" class="img-fluid"
+                        alt="Tempo de decomposição de materiais">
+                    <p class="fs-6">Fonte: <a href="https://www.openstreetmap.org/about" target="_blank"
+                            class="link-success">Reciclagem: o primeiro passo para a preservação ambiental</a></p>
+                </div>
+                <p>O lixo armazenado por tanto tempo gera vários problemas, como problemas ambientais e de saúde: o lixo
+                    acumulado pode contaminar a terra e a água, e ser um ambiente de proliferação de doenças.
+                </p>
+
+                <h3>Como reciclar no dia a dia</h3>
+                <ul>
+                    <li class="p-2"><strong>Conheça a sua Cidade:</strong> verifique quais materiais são recicláveis pelo serviço de
+                        coleta seletiva da sua prefeitura ou cooperativas locais</li>
+                    <li class="p-2"><strong>Separe o lixo:</strong> para a maioria das famílias, é suficiente serarar o lixo em
+                        "não-reciclável", como lixo orgânico, e "reciclável", que ainda pode ser dividido em papel,
+                        vidro, plástico, metal, madeira e lixo eletrônico (como pilhas e baterias), se for necessário no
+                        seu caso.</li>
+                    <li class="p-2"><strong>Limpe antes de descartar:</strong> a reciclagem pode ser difícil quando restos de comida
+                        ou outros resíduos estão misturados. A limpeza também evita a a proliferação de fungos e
+                        bactérias até que esses materiais cheguem aos centros de reciclagem</li>
+                    <li class="p-2"><strong>Descarte seus eletrônicos em locais apropriados:</strong> materiais como baterias,
+                        pilhas, e restos de celulares e computadores podem gerar substâncias tóxicas quando estão se
+                        decompondo. Por isso, é importante realizar o descarte em locais de coleta específicos, que
+                        conseguem reciclar esses materiais corretamente.</li>
+                    <li class="p-2"><strong>Reutilize sempre que possível:</strong> transforme potes, garrafas e caixas em novos
+                        objetos.</li>
+                    <li class="p-2"><strong>Reduza o Consumo de Descartáveis:</strong> Evite produtos de uso único, como copos,
+                        pratos e talheres descartáveis e sacolas plásticas. Tente escolher produtos com menos embalagens
+                        ou com refil, se for possível.</li>
+                </ul>
+
+                <h3>A Economia Circular</h3>
+                <p>
+                    A <strong>economia circular</strong> propõe um modelo econômico diferente do convencional (de extrair, produzir, usar e descartar): o produto deve ser criado com o objetivo de seus resíduos serem reutilizados ou reciclados. Isso resulta em redução no uso de matérias-primas extraídas da natureza, diminuição de resíduos, e ainda abre espaço para inovações, 
+                </p>
+                <p>
+                    Esse modelo de economia contribui para a <strong>Economia Sustentável</strong> por equilibrar o crescimento econômico com preservação ambiental.
+                    Cuidar do planeta não é só uma formalidade — é uma necessidade para o futuro da humanidade.
+                </p>
+
+
+
+            </div>
+            <div class="tab-pane fade" id="mapeamento-tab-pane" role="tabpanel" aria-labelledby="mapeamento-tab">
+                <p>Esse site utiliza dados da <a href="https://www.openstreetmap.org/about" target="_blank"
+                        class="link-success">OpenStreetMap</a>, que é “um projeto de produção colaborativa de dados
+                    geo-espaciais abertos”, disponibilizando informações de mapas e locais para todos, a partir da
+                    contribuição da própria comunidade.
+                </p>
+                <p>Se desejar ajudar a expandir o mapa da Open Street Map e acrescentar pontos e locais,
+                    <a href="https://www.openstreetmap.org/about" target="_blank" class="link-success">acesse este guia
+                        de introdução</a>
+                </p>
+                <p>Caso queira que um local apareça no mapa da EcoOrdenada, mas sem precisar cadastrar no Open Street
+                    Map, por favor, veja o segundo formulário em “Fale Conosco”.</p>
+                <p>O código-fonte deste site está disponível no repositório Github:
+                    <a href="https://github.com/AlxReposit/EcoOrdenada" target="_blank" class="link-success"><i
+                            class="bi bi-github"></i> EcoOrdenada</a>
+                </p>
+            </div>
+            <div class="tab-pane fade" id="contato-tab-pane" role="tabpanel" aria-labelledby="contato-tab">
+                <p>Deixe sua opinião sobre o site! Nos fale de problemas ou erros que você (muito provavelmente)
+                    encontrou, sugestões de melhorias, ou sua opinião em geral. Para isso, acesse o link do formulário:
+                </p>
+                <p class="text-center"><a
+                        href="https://docs.google.com/forms/d/e/1FAIpQLSd5z-ZhT0EtcTeO5E2NE2q5u3dNuUOqCfLbaAmFObu1NHwM6w/viewform?usp=dialog"
+                        target="_blank" class="link-success p-2 border border-success-subtle">Fale Conosco</a></p>
+                <br>
+                <p>Se quiser pedir para adicionarmos um novo ponto no mapa, relacionado à reciclagem ou descarte de
+                    resíduos, nos fale sobre o local acessando esse formulário:</p>
+                <p class="text-center"><a
+                        href="https://docs.google.com/forms/d/e/1FAIpQLSdUHdPoXiUrLZTBQlAHhNOzGjNAJKOYIPkcsyJRKVDrCCV5YA/viewform?usp=publish-editor"
+                        target="_blank" class="link-success p-2 border border-success-subtle"
+                        class="link-success">Solicitação de Novo Ponto</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!--<div class="px-4 py-5 my-5 text-center">
 
         <i class="bi bi-recycle text-success icon-xbig"></i>
         <i class="bi bi-recycle text-success icon-big"></i>
@@ -73,90 +235,19 @@
         <i class="text-success icon-medium bi bi-github"></i>
 
         <br>
-
- 
-        <h1 class="display-5 fw-bold text-body-emphasis">Centered hero</h1>
-        <div class="col-lg-6 mx-auto">
-            <p class="lead mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s
-                most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system,
-                extensive prebuilt components, and powerful JavaScript plugins.</p>
-            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center"> <button type="button"
-                    class="btn btn-primary btn-lg px-4 gap-3">Primary button</button> <button type="button"
-                    class="btn btn-outline-secondary btn-lg px-4">Secondary</button> </div>
-        </div>
-    </div>
+    </div>-->
 
     <!-- Rodapé -->
     <div class="container">
         <footer
             class="flex-wrap justify-content-between align-items-center text-center py-3 my-4 border-top border-light">
-            <span class="text-body-secondary">EcoOrdenada • Dados de <a href="https://www.openstreetmap.org" target="_blank"
-                    class="link-success">OpenStreetMap</a></span>
+            <span class="text-body-secondary">EcoOrdenada • Dados de <a href="https://www.openstreetmap.org"
+                    target="_blank" class="link-success" class="link-success">OpenStreetMap</a></span>
         </footer>
     </div>
 
+    <!-- Scripts Bootstrap -->
+    <script src="js/bootstrap.js"></script>
 </body>
 
 </html>
-
-
-
-<!--
-<div class="container">
-        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-            <a href="#"
-                class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-                <svg class="bi me-2" width="40" height="32" aria-hidden="true">
-                    <use xlink:href="#bootstrap"></use>
-                </svg>
-                <span class="fs-4">Simple header</span>
-            </a>
-            <ul class="nav nav-pills">
-                <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Home</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Features</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Pricing</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">FAQs</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">About</a></li>
-            </ul>
-        </header>
-    </div>
-
-    <div class="px-4 py-5 my-5 text-center"> <img class="d-block mx-auto mb-4"
-            src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
-        <h1 class="display-5 fw-bold text-body-emphasis">Centered hero</h1>
-        <div class="col-lg-6 mx-auto">
-            <p class="lead mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s
-                most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system,
-                extensive prebuilt components, and powerful JavaScript plugins.</p>
-            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center"> <button type="button"
-                    class="btn btn-primary btn-lg px-4 gap-3">Primary button</button> <button type="button"
-                    class="btn btn-outline-secondary btn-lg px-4">Secondary</button> </div>
-        </div>
-    </div>
-
-    <div class="container">
-        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-            <div class="col-md-4 d-flex align-items-center">
-                <a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1"
-                    aria-label="Bootstrap">
-                    <svg class="bi" width="30" height="24" aria-hidden="true">
-                        <use xlink:href="#bootstrap"></use>
-                    </svg>
-                </a>
-                <span class="mb-3 mb-md-0 text-body-secondary">© 2025 Company, Inc</span>
-            </div>
-            <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-                <li class="ms-3"><a class="text-body-secondary" href="#" aria-label="Instagram"><svg class="bi"
-                            width="24" height="24" aria-hidden="true">
-                            <use xlink:href="#instagram"></use>
-                        </svg></a></li>
-                <li class="ms-3"><a class="text-body-secondary" href="#" aria-label="Facebook"><svg class="bi"
-                            width="24" height="24">
-                            <use xlink:href="#facebook"></use>
-                        </svg>
-                    </a>
-                </li>
-            </ul>
-        </footer>
-    </div>
--->

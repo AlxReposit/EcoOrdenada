@@ -1,0 +1,41 @@
+### Testes de Rotas
+GET http://localhost:3000/ecoordenadas
+
+### Busca por ID - erro
+GET http://localhost:3000/ecoordenadas/690c01632702d62d35746b6b
+
+### Busca por Distância
+GET http://localhost:3000/ecoordenadas/-120.45/0.42/3000
+
+### Acessando via POST
+POST  http://localhost:3000/ecoordenadas
+Content-Type: application/json
+
+{
+    "nome": "req.body.nome",
+        "descricao": "req.body.descricao",
+        "endereco": "req.body.endereco",
+        "osm_amenity": "req.body.osm_amenity",
+        "localizacao": {
+            "type": "Point",
+            "coordenadas": [
+                10,
+                20
+            ]
+        }
+}
+
+
+
+### Deletar registro
+DELETE http://localhost:3000/ecoordenadas/690c01632702d62d35746b6b
+
+### Alterando informações com PATCH - erro
+PATCH http://localhost:3000/ecoordenadas/690c01fa2702d62d35746b70
+Content-Type: application/json
+
+{
+    "nome": "Nome alterando"
+}
+
+###

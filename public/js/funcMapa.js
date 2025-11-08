@@ -17,7 +17,7 @@ L.Control.btnBuscaBox = L.Control.extend({
         L.DomEvent.on(btn, 'click', async () => {
             //testeBoundingBox();
             const dados = await buscarBoxMapa();
-            if(dados != null) carregarMarcadores(dados);
+            carregarMarcadores(dados);
         });
 
         return btn;
@@ -33,17 +33,6 @@ L.control.btnBuscaBox = function (opts) {
 }
 
 L.control.btnBuscaBox({ position: 'bottomleft' }).addTo(map);
-
-/*
-const dados = [
-    { descricao: 'Local A', coordenada: [51.505, -0.09] },
-    { descricao: 'Local B', coordenada: [51.4, -0.09] },
-    { descricao: 'Local C', coordenada: [51.3, -0.09] },
-    { descricao: 'Local D', coordenada: [51.2, -0.09] }
-]*/
-
-//var marker = L.marker([51.5, -0.09]).addTo(map);
-//marker.bindPopup("<b>Hello world!</b><br>I am a popup.");
 
 //variáavel para controle de marcadores ativos no mapa
 let marcadores = [];
@@ -76,7 +65,7 @@ function removerMarcadores() {
 function carregarMarcadores(locais) {
 
     if (locais == null || locais == undefined || locais == '') {
-        alert("Não foram encontrados locais de reciclagem próximos. Por favor, tente aumentar a distância da pesquisa.");
+        alert("Não foram encontrados locais de reciclagem próximos. Por favor, tente aumentar a distância da pesquisa, e veja a aba Sobre -> Instruções -> Limitações");
         return;
     }
 
@@ -148,6 +137,8 @@ async function buscarLocaisDistancia(lat, lon, distanciaBusca) {
 
     if (distanciaBusca == null) {
         distanciaBusca = 5000;
+    } else {
+        distanciaBusca = distanciaBusca * 1000;
     }
     //const distanciaBusca = 3000;
     //const lat = -23.519127;
