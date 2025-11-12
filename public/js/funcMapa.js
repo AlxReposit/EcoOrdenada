@@ -274,7 +274,7 @@ async function buscarMongDBPoligono() {
     }
 
     try {
-        const resposta = await fetch(`http://localhost:3000/ecoordenadas/buscarEcoordenada`, {
+        const resposta = await fetch(`https://ecoordenada.onrender.com/ecoordenadas/buscarEcoordenada`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -302,7 +302,7 @@ async function buscarMongDBPoligono() {
 
 async function buscarMongDBDistancia(lat, lon, dist) {
     try {
-        const resposta = await fetch(`http://localhost:3000/ecoordenadas/buscarEcoordenada/${lon}/${lat}/${dist}`, { method: "GET" });
+        const resposta = await fetch(`https://ecoordenada.onrender.com/ecoordenadas/buscarEcoordenada/${lon}/${lat}/${dist}`, { method: "GET" });
 
         if (!resposta.ok) {
             throw new Error(`Erro na chamada da API MongoBD: ${resposta.status}`);
