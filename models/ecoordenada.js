@@ -18,13 +18,13 @@ const ecoordenadaSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-    localizacao: {
+    location: {
         type: {
             type: String,
             enum: ['Point'],
             required: true
         },
-        coordenadas: { //Em GeoJSON, é primeiro lon depois lat
+        coordinates: { //Em GeoJSON, é primeiro lon depois lat
             type: [Number],
             required: true
         }

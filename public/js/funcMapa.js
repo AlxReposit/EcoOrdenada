@@ -15,8 +15,17 @@ L.Control.btnBuscaBox = L.Control.extend({
         btn.innerHTML = 'Buscar no Mapa';
 
         L.DomEvent.on(btn, 'click', async () => {
-            //testeBoundingBox();
-            const dados = await buscarBoxMapa();
+
+            let dados = [];
+            const dadosOverpass = await buscarBoxMapa();
+            const dadosDb = await buscarMongDBPoligono();
+
+            if (dadosOverpass != null) {
+                dados = dadosOverpass.concat(dadosDb);
+            } else {
+                dados = dadosDb;
+            }
+
             carregarMarcadores(dados);
         });
 
@@ -50,8 +59,17 @@ document.getElementById('formBusca').addEventListener('submit', async (e) => {
     const distancia = document.getElementById('inputDistancia').value;
 
     const dadosNominatim = await buscarLocalNominatim(query);
-    const dadosOverpass = await buscarLocaisDistancia(dadosNominatim[0].lat, dadosNominatim[0].lon, distancia)
-    carregarMarcadores(dadosOverpass);
+    const dadosOverpass = await buscarLocaisDistancia(dadosNominatim[0].lat, dadosNominatim[0].lon, distancia);
+    const dadosDb = await buscarMongDBDistancia(dadosNominatim[0].lat, dadosNominatim[0].lon, distancia);
+
+    let dados = [];
+    if (dadosOverpass != null) {
+        dados = dadosOverpass.concat(dadosDb);
+    } else {
+        dados = dadosDb;
+    }
+
+    carregarMarcadores(dados);
 });
 
 //Remove marcadores do mapa
@@ -75,7 +93,7 @@ function carregarMarcadores(locais) {
 
     locais.forEach(local => {
         //Ajustar descrições para facilitar leitura
-        const tipo = (local.tipo == 'centre') ? 'Centro de Coleta de Recicláveis' : 'Container de Lixo Reciclável';
+        const tipo = (local.tipo == 'centre') ? 'Centro de Coleta de Recicláveis' : (local.tipo == 'container') ? 'Container de Lixo Reciclável' : local.tipo;
 
         //Acrescentar marcador no mapa
         const marcador = L.marker([local.lat, local.lon])
@@ -189,8 +207,7 @@ async function buscarBoxMapa() {
         return null;
     }
 
-    const url = "https://overpass-api.de/api/interpreter";
-
+    //const url = "https://overpass-api.de/api/interpreter";
     const latS = map.getBounds().getSouth();
     const lonW = map.getBounds().getWest();
     const latN = map.getBounds().getNorth();
@@ -232,7 +249,6 @@ async function buscarApiOverpass(query) {
             lon: local.lon,
             nome: local.tags.name || "Local sem nome",
             tipo: local.tags.recycling_type || "Desconchecido",
-            tags: local.tags
         }));
 
     } catch (error) {
@@ -240,9 +256,91 @@ async function buscarApiOverpass(query) {
     }
 }
 
+async function buscarMongDBPoligono() {
+    const pontoSE = [map.getBounds().getEast(), map.getBounds().getSouth()];
+    const pontoSW = [map.getBounds().getWest(), map.getBounds().getSouth()];
+    const pontoNW = [map.getBounds().getWest(), map.getBounds().getNorth()];
+    const pontoNE = [map.getBounds().getEast(), map.getBounds().getNorth()];
+
+    const poligonoMapa = {
+        "type": "Polygon",
+        "coordinates": [[
+            pontoSE,
+            pontoSW,
+            pontoNW,
+            pontoNE,
+            pontoSE
+        ]]
+    }
+
+    try {
+        const resposta = await fetch(`http://localhost:3000/ecoordenadas/buscarEcoordenada`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ poligono: poligonoMapa })
+        });
+
+        if (!resposta.ok) {
+            throw new Error(`Erro na chamada da API MongoBD: ${resposta.status}`);
+        }
+
+        const dados = await resposta.json();
+
+        return dados.map(local => ({
+            id: local._id,
+            lat: local.location.coordinates[1],
+            lon: local.location.coordinates[0],
+            nome: local.nome || "Local sem nome",
+            tipo: local.descricao || "Desconchecido",
+        }));
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function buscarMongDBDistancia(lat, lon, dist) {
+    try {
+        const resposta = await fetch(`http://localhost:3000/ecoordenadas/buscarEcoordenada/${lon}/${lat}/${dist}`, { method: "GET" });
+
+        if (!resposta.ok) {
+            throw new Error(`Erro na chamada da API MongoBD: ${resposta.status}`);
+        }
+
+        const dados = await resposta.json();
+
+        return dados.map(local => ({
+            id: local._id,
+            lat: local.location.coordinates[1],
+            lon: local.location.coordinates[0],
+            nome: local.nome || "Local sem nome",
+            tipo: local.descricao || "Desconchecido",
+        }));
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 //FUnções para teste - apagar depois
 
+document.getElementById('btnMongo').addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    //Query para busca
+    const query = document.getElementById('inputBusca').value;
+    if (query == "" || !query || query.trim() == "") {
+        return;
+    }
+
+    const distancia = document.getElementById('inputDistancia').value;
+
+    const dadosNominatim = await buscarLocalNominatim(query);
+    const dadosDB = await buscarMongDBDistancia(dadosNominatim[0].lat, dadosNominatim[0].lon, distancia)
+    carregarMarcadores(dadosDB);
+});
+
+/*
 function testeBoundingBox() {
 
     const latS = map.getBounds().getSouth();
@@ -268,15 +366,4 @@ function testeBoundingBox() {
 
 
 }
-
-function mapearDados(dados) {
-    //Padronizazr dados
-    return dados.elements.map(local => ({
-        id: local.id,
-        lat: local.lat,
-        lon: local.lon,
-        nome: local.tags.name || "Local sem nome",
-        tipo: local.tags.recycling_type || "Desconchecido",
-        tags: local.tags
-    }));
-}
+*/
