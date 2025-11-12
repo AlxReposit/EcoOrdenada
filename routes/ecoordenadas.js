@@ -25,6 +25,9 @@ router.get('/:id', getEcoordenada, async (req, res) => {
 // http://thecodebarbarian.com/80-20-guide-to-mongodb-geospatial-queries
 router.get('/buscarEcoordenada/:lon/:lat/:distancia', async (req, res) => {
     try {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Request-Width, Content-Type, Accept");
+
         const ecoordenada = await Ecoordenada.find({
             location: {
                 $geoWithin: {
@@ -47,6 +50,9 @@ router.get('/buscarEcoordenada/:lon/:lat/:distancia', async (req, res) => {
 // Rota para Buscar registros localizados dentro de um polígono
 router.post('/buscarEcoordenada', async (req, res) => {
     try {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Request-Width, Content-Type, Accept");
+
         const ecoordenada = await Ecoordenada.find({
             location: {
                 $geoWithin: {
