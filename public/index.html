@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoOrdenada - Descarte Ecológico</title>
+    <title>EcoOrdenada</title>
     <link rel="icon" href="/images/logo.svg">
 
     <!-- Bootstrap -->
@@ -18,20 +18,30 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="/css/style.css">
+
+    <style>
+        body {
+            margin-top: 77px;   
+        }
+
+        @media only screen and (max-width: 880px) {
+            body {
+                margin-top: 114px;
+            }
+        }
+    </style>
 </head>
 
 <body>
     <!-- Navbar -->
     <div class="bg-success">
         <div class="container">
-            <nav class="navbar navbar-expand-lg navbar-dark bg-success"> <!--fixed-top-->
+            <nav id="navMenu" class="navbar navbar-expand-lg navbar-dark bg-success fixed-top">
                 <div
                     class="container-fluid d-flex flex-wrap justify-content-center py-2 mb-1 border-bottom border-light">
 
                     <a class="navbar-brand fw-bold" href="#">Eco<i class="bi-geo-alt-fill" alt="O"></i>rdenada</a></a>
                     <a class="nav-link ms-3" href="sobre.html"> <i class="bi bi-info-circle"></i> Sobre</a>
-
-                    <button class="btn btn-outline-light ms-3" id="btnMongo"><i class="bi bi-search"></i></button>
 
                     <form class="d-flex ms-auto" id="formBusca">
                         <input class="form-control me-3" id="inputBusca" type="search" placeholder="Buscar endereço">
@@ -77,16 +87,36 @@
     <div class="container">
         <footer
             class="flex-wrap justify-content-between align-items-center text-center py-3 mt-4 border-top border-light">
-            <span class="text-body-secondary">EcoOrdenada • Dados de <a href="https://www.openstreetmap.org"
-                    target="_blank" class="link-success">OpenStreetMap</a></span>
+            <span class="text-body-secondary"><a href="https://github.com/AlxReposit/EcoOrdenada" target="_blank" class="link-success"><i
+                            class="bi bi-github"></i></a> EcoOrdenada • Dados de <a href="https://www.openstreetmap.org"
+                    target="_blank" class="link-success" class="link-success">OpenStreetMap</a></span>
         </footer>
     </div>
 
     <!-- Scripts -->
     <!--<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>-->
     <script src="/leaflet/leaflet.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/modalMsg.js" type="module"></script>
     <script src="/js/funcMapa.js"></script>
 
+    <!-- Componente Modal do Booststrap para mensagens -->
+    <div class="modal fade" id="modalMsg" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Aviso</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

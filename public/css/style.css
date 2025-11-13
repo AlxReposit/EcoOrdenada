@@ -8,10 +8,6 @@
     height: calc(100vh - 200px);
   }
 }
-
-TODO
-  - Deixar busca e botão no  meio
-  - Adicionar espaço entre links e busca
   */
 
 
@@ -25,18 +21,31 @@ TODO
   overflow-y: auto;
 }
 
+@media only screen and (max-width: 767px) {
+  #map {
+    height: calc(100vh - 300px);
+    width: 100%;
+  }
+
+  #sidebar {
+    height: calc(100vh - 350px);
+    overflow-y: auto;
+  }
+}
+
+#navMenu{
+  padding-left: 7.8%;
+  padding-right: 7.8%;
+}
+
 .list-group-item {
   cursor: pointer;
 }
 
-
-
-#btnBuscaBox:hover{
-    opacity: 0.8;
-    cursor: pointer;
+#btnBuscaBox:hover {
+  opacity: 0.8;
+  cursor: pointer;
 }
-
-
 
 
 /*Tamanhos de ícones*/

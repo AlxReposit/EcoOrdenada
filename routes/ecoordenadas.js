@@ -13,13 +13,13 @@ router.get('/', async (req, res) => {
 })
 
 // Rota para Buscar registro por ID
-router.get('/:id', getEcoordenada, async (req, res) => {
+/*router.get('/:id', getEcoordenada, async (req, res) => {
     try {
         res.json(res.ecoordenada)
     } catch (error) {
-        res.status(500).json({ message: error.message, foo: "foo" })
+        res.status(500).json({ message: error.message })
     }
-})
+})*/
 
 // Rota para Buscar registros com base na distância em relação a um ponto
 // http://thecodebarbarian.com/80-20-guide-to-mongodb-geospatial-queries
@@ -43,7 +43,7 @@ router.get('/buscarEcoordenada/:lon/:lat/:distancia', async (req, res) => {
         res.json(ecoordenada)
 
     } catch (error) {
-        res.status(500).json({ message: error.message, foio: "foio" })
+        res.status(500).json({ message: error.message })
     }
 })
 
@@ -68,12 +68,12 @@ router.post('/buscarEcoordenada', async (req, res) => {
         res.json(ecoordenada)
 
     } catch (error) {
-        res.status(500).json({ message: error.message, foio: "foio" })
+        res.status(500).json({ message: error.message })
     }
 })
 
 // Rota para Incluir novo registro
-router.post('/novaEcoordenada', async (req, res) => {
+/*router.post('/novaEcoordenada', async (req, res) => {
     const ecoordenada = new Ecoordenada({
         nome: req.body.nome,
         descricao: req.body.descricao,
@@ -94,16 +94,16 @@ router.post('/novaEcoordenada', async (req, res) => {
     } catch (error) {
         res.status(400).json({ message: error.message })
     }
-})
+})*/
 
 // Rota para Atualizar registro
-router.patch('/atualizarEcoordenada/:id', getEcoordenada, async (req, res) => {
+/*router.patch('/atualizarEcoordenada/:id', getEcoordenada, async (req, res) => {
     if (req.body.nome != null) res.ecoordenada.nome = req.body.nome
     if (req.body.descricao != null) res.ecoordenada.descricao = req.body.descricao
     if (req.body.endereco != null) res.ecoordenada.endereco = req.body.endereco
     if (req.body.osm_amenity != null) res.ecoordenada.osm_amenity = req.body.osm_amenity
     if (req.body.localizacao != null) res.ecoordenada.localizacao = req.body.localizacao
-    /*if(req.body.lon != null && req.body.lat != null){
+    / *if(req.body.lon != null && req.body.lat != null){
         res.ecoordenada.localizacao = {
             type: 'Point',
             coordenadas: [
@@ -111,7 +111,7 @@ router.patch('/atualizarEcoordenada/:id', getEcoordenada, async (req, res) => {
                 req.body.lat,
             ]
         }
-    }*/
+    }* /
 
     try {
         const atualizaEcoordenada = res.ecoordenada.save()
@@ -119,17 +119,17 @@ router.patch('/atualizarEcoordenada/:id', getEcoordenada, async (req, res) => {
     } catch (error) {
         res.status(400).json({ message: error.message })
     }
-})
+})*/
 
 // Rota para Deletar registro
-router.delete('/deletarEcoordenada/:id', getEcoordenada, async (req, res) => {
+/*router.delete('/deletarEcoordenada/:id', getEcoordenada, async (req, res) => {
     try {
         await res.ecoordenada.deleteOne()
         res.json({ message: 'O registro do Local foi excluído com sucesso.' })
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
-})
+})*/
 
 // Função de middleware para validação do ID informado
 async function getEcoordenada(req, res, next) {
@@ -145,7 +145,7 @@ async function getEcoordenada(req, res, next) {
         next()
 
     } catch (error) {
-        res.status(500).json({ message: error.message, foio: "foio" })
+        res.status(500).json({ message: error.message })
     }
 }
 

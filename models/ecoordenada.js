@@ -83,13 +83,4 @@ http://thecodebarbarian.com/80-20-guide-to-mongodb-geospatial-queries
 
 */
 
-/* Outros Dados 
-- Nome
-- Descrição
-- Endereço
-- Amenity (OSM)
-- Tipos de resíduo
-- Data inclusão/alteração
-*/
-
 module.exports = mongoose.model('Ecoordenada', ecoordenadaSchema)

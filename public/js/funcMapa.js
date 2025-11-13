@@ -15,6 +15,11 @@ L.Control.btnBuscaBox = L.Control.extend({
         btn.innerHTML = 'Buscar no Mapa';
 
         L.DomEvent.on(btn, 'click', async () => {
+            //Limita a distância de pesquisa pelo zoom
+            if (map.getZoom() < 10) {
+                mensagem('Aproxime o mapa para pesquisar!');
+                return;
+            }
 
             let dados = [];
             const dadosOverpass = await buscarBoxMapa();
@@ -81,9 +86,8 @@ function removerMarcadores() {
 
 //Carrega os marcadores no mapa conforme dados recebidos
 function carregarMarcadores(locais) {
-
     if (locais == null || locais == undefined || locais == '') {
-        alert("Não foram encontrados locais de reciclagem próximos. Por favor, tente aumentar a distância da pesquisa, e veja a aba Sobre -> Instruções -> Limitações");
+        mensagem('Não foram encontrados locais de reciclagem próximos. Por favor, tente aumentar a distância da pesquisa, e veja a aba Sobre -> Instruções -> Limitações')
         return;
     }
 
@@ -168,7 +172,7 @@ async function buscarLocaisDistancia(lat, lon, distanciaBusca) {
     out;
     `;
 
-    const buscaId = `
+    /*const buscaId = `
     [out:json][timeout:250];
     // gather results
     node(id:9044572970, {{bbox}});
@@ -183,7 +187,7 @@ async function buscarLocaisDistancia(lat, lon, distanciaBusca) {
       node(around:${distanciaBusca}, ${lat}, ${lon})["amenity"="waste_disposal"];
     );
     out geom;
-    `;
+    `;*/
 
     /*
     https://overpass-turbo.eu/#
@@ -201,13 +205,6 @@ async function buscarLocaisDistancia(lat, lon, distanciaBusca) {
 
 //Função para enviar a busca de dados dentro dos limites do mapa (que o usuário está vendo)
 async function buscarBoxMapa() {
-    //Limita a distância de pesquisa pelo zoom
-    if (map.getZoom() < 10) {
-        alert('Aproxime o mapa para pesquisar!');
-        return null;
-    }
-
-    //const url = "https://overpass-api.de/api/interpreter";
     const latS = map.getBounds().getSouth();
     const lonW = map.getBounds().getWest();
     const latN = map.getBounds().getNorth();
@@ -321,49 +318,3 @@ async function buscarMongDBDistancia(lat, lon, dist) {
         console.log(error);
     }
 }
-
-//FUnções para teste - apagar depois
-
-document.getElementById('btnMongo').addEventListener('click', async (e) => {
-    e.preventDefault();
-
-    //Query para busca
-    const query = document.getElementById('inputBusca').value;
-    if (query == "" || !query || query.trim() == "") {
-        return;
-    }
-
-    const distancia = document.getElementById('inputDistancia').value;
-
-    const dadosNominatim = await buscarLocalNominatim(query);
-    const dadosDB = await buscarMongDBDistancia(dadosNominatim[0].lat, dadosNominatim[0].lon, distancia)
-    carregarMarcadores(dadosDB);
-});
-
-/*
-function testeBoundingBox() {
-
-    const latS = map.getBounds().getSouth();
-    const lonW = map.getBounds().getWest();
-    const latN = map.getBounds().getNorth();
-    const lonE = map.getBounds().getEast();
-
-    console.log(`lat South: ${latS}`)
-    console.log(`lon West: ${lonW}`)
-    console.log(`lat North: ${latN}`)
-    console.log(`lon East: ${lonE}`)
-
-    console.log(`N - S: ${latN - latS}`)
-    console.log(`E - W: ${lonE - lonW}`)
-
-    console.log(`zoom: ${map.getZoom()}`)
-
-
-
-    if (map.getZoom() < 10) {
-        alert('Aproxime o mapa para pesquisar!')
-    }
-
-
-}
-*/
