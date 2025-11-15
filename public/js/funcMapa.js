@@ -61,7 +61,13 @@ document.getElementById('formBusca').addEventListener('submit', async (e) => {
         return;
     }
 
-    const distancia = document.getElementById('inputDistancia').value;
+    let distancia = document.getElementById('inputDistancia').value;
+
+    if (distancia == null || distancia < 0) {
+        distancia = 5000;
+    } else {
+        distancia = distancia * 1000;
+    }
 
     const dadosNominatim = await buscarLocalNominatim(query);
     const dadosOverpass = await buscarLocaisDistancia(dadosNominatim[0].lat, dadosNominatim[0].lon, distancia);
@@ -157,11 +163,6 @@ async function buscarLocalNominatim(query) {
 async function buscarLocaisDistancia(lat, lon, distanciaBusca) {
     map.setView([lat, lon], 13);
 
-    if (distanciaBusca == null) {
-        distanciaBusca = 5000;
-    } else {
-        distanciaBusca = distanciaBusca * 1000;
-    }
     //const distanciaBusca = 3000;
     //const lat = -23.519127;
     //const lon = -46.641321;
